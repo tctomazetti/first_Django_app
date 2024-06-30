@@ -12,6 +12,7 @@ def results(request: HttpRequest, question_id: int) -> HttpResponse:
 
 def vote(request: HttpRequest, question_id: int) -> HttpResponse:
     question = get_object_or_404(Question, pk=question_id)
+    print(request.POST.keys())
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
@@ -33,9 +34,9 @@ def vote(request: HttpRequest, question_id: int) -> HttpResponse:
         return HttpResponseRedirect(reverse("polls:results", args=(question_id, )))
 
 def index(request: HttpRequest) -> HttpResponse:
-    last_question_list = Question.objects.order_by("-pub_date")[:5]
+    latest_question_list = Question.objects.order_by("-pub_date")[:5]
     context = {
-        "last_question_list": last_question_list
+        "latest_question_list": latest_question_list
     }
     return render(request, "polls/index.html", context)
 
